@@ -19,10 +19,19 @@
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const server = require('./src/app.js');
 const { conn } = require('./src/db.js');
+const { getDietsAndSendThemToDb, dbFetchAllRecipes, dbFetchByTitle } = require('../api/src/controllers/dbFunctions')
+const  { getById, getByTitle }  = require('../api/src/controllers/apiFunctions')
 
 // Syncing all the models at once.
-conn.sync({ force: true }).then(() => {
-  server.listen(3001, () => {
-    console.log('%s listening at 3001'); // eslint-disable-line no-console
-  });
+conn.sync({ force: false }).then(() => {
+	server.listen(5000, () => {
+		console.log('Backend listening at PORT 5000'); // eslint-disable-line no-console
+	});
 });
+
+getDietsAndSendThemToDb() //traigo las dietas, si ya estan en db, no hace nada
+
+//dbFetchByTitle('pollo')
+//dbFetchAllRecipes()
+//getById(567)
+//getByTitle('chicken')
