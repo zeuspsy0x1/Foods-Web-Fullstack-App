@@ -13,7 +13,8 @@ const getById = async (id) => {
         }
 
 		let recipeData = [];
-		await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${DB_API}`).then((res) => {
+        let idStringToNumber = parseInt(id)
+		await axios.get(`https://api.spoonacular.com/recipes/${idStringToNumber}/information?apiKey=${DB_API}`).then((res) => {
 			//console.log(res.data);
 			let r = res.data;
 			recipeData = [{
@@ -22,21 +23,13 @@ const getById = async (id) => {
                 summary: r.summary ? r.summary : 'no summary',
                 healthScore: r.healthScore ? r.healthScore : 'no healthScore',
                 image: r.image ? r.image : 'no image',
-                diets: r.diets ? r.diets : 'no diets',
-                steps: r.analyzedInstructions[0] ? r.analyzedInstructions[0].steps : 'there are no steps for this dish',
+                diets: r.diets.length >0 ? r.diets : ['no diets'],
+                steps: r.analyzedInstructions[0] ? r.analyzedInstructions[0].steps : ['no steps'],
 			}];
             //console.log(recipeData);
 		});
 
-        return recipeData[0] === undefined ? 'recipe not found' : recipeData;
-
-        /* if (Array.isArray(recipeData) && recipeData.length > 0) {
-            return  recipeData;
-        }   
-
-            return 'recipe not found'; */
-        
-
+        return recipeData.length === 0 ? 'recipe not found' : recipeData;
      
 	} catch (error) {
 		console.log(error);
@@ -55,8 +48,8 @@ const getByTitle = async (title) => {
                     summary: r.summary ? r.summary : 'no summary',
                     healthScore: r.healthScore ? r.healthScore : 'no healthScore',
                     image: r.image ? r.image : 'no image',
-                    diets: r.diets ? r.diets : 'no diets',
-                    steps: r.analyzedInstructions[0] ? r.analyzedInstructions[0].steps : 'there are no steps for this dish',
+                    diets: r.diets.length > 0 ? r.diets : ['no diets'],
+                    steps: r.analyzedInstructions[0] ? r.analyzedInstructions[0].steps : ['no steps'],
             })})
             //console.log(mappedRecipes);
 		});
@@ -81,13 +74,13 @@ const allRecipes = async () => {
                     summary: r.summary ? r.summary : 'no summary',
                     healthScore: r.healthScore ? r.healthScore : 'no healthScore',
                     image: r.image ? r.image : 'no image',
-                    diets: r.diets ? r.diets : 'no diets',
-                    steps: r.analyzedInstructions[0] ? r.analyzedInstructions[0].steps : 'there are no steps for this dish',
+                    diets: r.diets.length > 0 ? r.diets : ['no diets'],
+                    steps: r.analyzedInstructions[0] ? r.analyzedInstructions[0].steps : ['no steps'],
             })})
             //console.log(mappedRecipes);
         });
         //console.log(recipes);
-            return recipes !== [] ? recipes : 'no recipes found';
+            return Array.isArray(recipes) ? recipes : 'no recipes found';
     } catch (error) {
         console.log(error);
     }

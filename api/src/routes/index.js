@@ -8,7 +8,7 @@ const router = Router();
 
 // Configurar los routers
 
-//Get /genres from db
+//Get /Diets from db
 router.get('/getDiets', async function (req, res) {
 	let response = await dbFetchAllDiets();
 
@@ -19,14 +19,25 @@ router.get('/getDiets', async function (req, res) {
 	}
 });
 
-//GET /videogames
+//GET /recipes
 router.get('/allRecipes', async function (req, res) {
 	
 	const responseApi = await allRecipes()
 	const responseDb = await dbFetchAllRecipes()
 
 	//concatenate responseApi and responseDb
-	let response = [...responseDb, ...responseApi]
+	let response = []
+	
+	if (Array.isArray(responseApi) && Array.isArray(responseDb)) {
+		response = [...responseDb, ...responseApi]
+	}
+	if (responseApi === "no recipes found") {
+		response = [...responseDb]
+	}
+	if (responseDb === null) {
+		response = [...responseApi]
+	}
+
 
 	if (response.length > 0) {
 		res.status(200).json(response);
@@ -35,7 +46,7 @@ router.get('/allRecipes', async function (req, res) {
 	}
 });
 
-//GET /videogames?name="..."  //////// http://localhost:5000/recipes?title=pasta
+//GET /recipes?name="..."  //////// http://localhost:5000/recipes?title=pasta
 router.get('/recipes?', async function (req, res) {
 	const { title } = req.query
 	let	responseApi = await getByTitle(title)
