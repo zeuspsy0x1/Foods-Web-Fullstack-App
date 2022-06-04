@@ -6,6 +6,8 @@ import {ADD_RECIPE,
     SHOW_RECIPE_BY_TITLE,
     SHOW_ERROR,
     SHOW_DIETS_TO_MAP,
+	FILTER_BY_ID_LOWER,
+	FILTER_BY_ID_MAX,
     //FILTER_ALL_V,
     GET_DIETS_LINK,
     GET_ALL_RECIPES_LINK,
@@ -80,7 +82,7 @@ export function getRecipeByTitle(title) {
 			});
 	};
 }
-export function getGenres() {
+export function getDiets() {
 	return function (dispatch) {
 		axios
 			.get(GET_DIETS_LINK)
@@ -103,15 +105,10 @@ export function getGenres() {
 	};
 }
 
-/* export function filter
-SHOW_FILTERED_BY_DIETS
- */
-/* 
-export function filterById(state) {
+export function filtersActionFunction(filterType, payload) {
 	return function (dispatch) {
 		dispatch({
-			type: FILTER_ALL_V,
-			payload: state,
+			type: filterType, payload: payload
 		});
 	};
-} */
+}

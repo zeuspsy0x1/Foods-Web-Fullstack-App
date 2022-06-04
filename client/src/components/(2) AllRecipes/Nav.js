@@ -3,46 +3,58 @@ import { useNavigate } from 'react-router-dom'
 import AllRecipes from './AllRecipes'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
-import { getRecipeByTitle } from '../../redux/actions'
+import {  getAllRecipes, getDiets } from '../../redux/actions'
 import { useState } from 'react'
+import RenderizeFilteredRecipes from './RenderizeFilteredRecipes'
+import { filtersActionFunction } from '../../redux/actions'
+
+import {FILTER_BY_ASCENDENT_TITLE,
+    FILTER_BY_DESCENDENT_TITLE,
+	FILTER_BY_ASCENDENT_HEALTHSCORE,
+    FILTER_BY_DESCENDENT_HEALTHSCORE,
+    FILTER_BY_DIET_TIPE } from '../../redux/actionNamesAndBackendLinks'
 
 
-function Nav() {
+ function Nav () {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const navigateToSomething = () => {
+    const navigateToCreateRecipe = () => {
         navigate('/')
-
     }
-    
     //PARA PASARLE EL NOMBRE AL COMPONENTE QUE RENDEREZA POR NOMBRE O TODOS LOS 100 DE LA API Y DB
+    const [recipes, setRecipes] = useState([])
+    const [filteredRecipes, setFilteredRecipes] = useState([])
     const [recipeTitle, setRecipeTitle] = useState('')
-    const [recipeTitleFinal, setRecipeTitleFinal] = useState('')
-
+   
     //DISPATCH DE FILTROS EN REDUX
+    useEffect(() => {
+            dispatch(getAllRecipes());
+            dispatch(getDiets());
+    }, [dispatch])
 
+    const recipesState =  useSelector(state => state.recipes)
+    const filteredRecipesState = useSelector(state => state.filteredRecipes)
+    const diets = useSelector(state => state.diets)
 
-    /* 
-    1. Lista de filtros
-    2. Action function que mande la action que le pido
-    3. Reducer recibe la action y filtra recipes y lo manda a un nuevo array?????????? O al mismo? 
-    */
+    const handleTitleSubmit = (e) => {e.preventDefault(); setRecipeTitle(e.target[0].value)}
 
-
+    const mappedDietsToRender = diets?.map( d => {
+        return <option key={d.name}>{d.name}</option> 
+    })
+     
+    
 
     return (
       <Fragment>
           <div>Logo </div>
-          
-            <form onSubmit = {(e) => { e.preventDefault(); setRecipeTitleFinal(recipeTitle)}}>
-                <input onChange = {(e) => setRecipeTitle(e.target.value)}></input>
+            <form onSubmit = {(e) => {handleTitleSubmit(e);}}>
+                <input type={'text'}></input>
                 <button type = 'submit'>Click to search recipe name</button>
             </form>
-
-              {/* <input onSubmit={ (e) => onSubmitInput(e) } placeholder='Search by name'></input> */}
           <br/>
-          <button onClick={navigateToSomething}> Create Recipe </button>
+          <button onClick={navigateToCreateRecipe}> Create Recipe </button>
           <div className = 'filters'>
+
                 <div> Filters </div>
                 <div> Diet Type </div>
                 <div> Filters </div>
@@ -50,12 +62,35 @@ function Nav() {
                 <div> Filters </div>
                 <div> Health Score </div>
                 <div> Filters </div>
-<br/>
-                 <AllRecipes title={recipeTitleFinal}/>
-
+                <button onClick={() => {dispatch(filtersActionFunction(FILTER_BY_ASCENDENT_TITLE));
+                    setFilteredRecipes(filteredRecipesState)
+                }}>ORDER UP</button>
+                <button onClick={() => {dispatch(filtersActionFunction(FILTER_BY_DESCENDENT_TITLE));
+                    setFilteredRecipes(filteredRecipesState)}}>ORDER DOWN</button>
+                <button onClick={() => {dispatch(filtersActionFunction(FILTER_BY_ASCENDENT_HEALTHSCORE));
+                    setFilteredRecipes(filteredRecipesState)
+                }}>HEALTHSCORE UP</button>
+                <button onClick={() => {dispatch(filtersActionFunction(FILTER_BY_DESCENDENT_HEALTHSCORE));
+                    setFilteredRecipes(filteredRecipesState)}}>HEALTHSCORE DOWN</button>
+                
+                <div>Filter by diet type</div> 
+                <select onChange={(e) => {console.log(e.target.value); dispatch(filtersActionFunction(FILTER_BY_DIET_TIPE, e.target.value))}}>
+                  
+                <option value="none" selected disabled hidden>Select an Option</option>
+                    {mappedDietsToRender}
+                </select>
+                
+            <br/>
+                 {  filteredRecipesState.length > 0 ?
+                    <RenderizeFilteredRecipes/> :
+                    recipeTitle !== '' ?
+                    <AllRecipes title={recipeTitle}/>:
+                    <AllRecipes/> }
+            
           </div>
       </Fragment>
   )
 }
+ 
 
 export default Nav

@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LandingPage from './components/(1) LandingPage/LandingPage';
 import AllRecipes from './components/(2) AllRecipes/AllRecipes';
-
+import RenderizeFilteredRecipes from './components/(2) AllRecipes/RenderizeFilteredRecipes';
 import Card from './components/(2) AllRecipes/Card';
 import Detail from './components/(3) RecipeDetail/Detail';
 import Nav from './components/(2) AllRecipes/Nav';
@@ -16,6 +16,7 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/allrecipes" element={<AllRecipes />} />
               <Route path="/detail/:id" element={<Detail />} />
+              <Route path="/filtered" element={<RenderizeFilteredRecipes />} />
 
               <Route path="/nav" element={<Nav />} />
               {/* <Route path="/allrecipes" element={<Card />} /> */}

@@ -13,6 +13,7 @@ function AllRecipes(props) {
 
 	useEffect(() => {
 		if (props.title && props.title !== '') {
+			console.log('busco recipes por title')
 			return dispatch(getRecipeByTitle(props.title)) //intento cargar por title, si no hay title, paso todos
 		}
 		else {
@@ -22,7 +23,7 @@ function AllRecipes(props) {
 	}, [dispatch, props.title]);
 
 	const allRecipes = useSelector((state) => state.recipes);
-
+	
 
 	const mapeo = allRecipes.map((item) => {
 		return (
