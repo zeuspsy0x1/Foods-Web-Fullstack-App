@@ -8,7 +8,7 @@ import {ADD_RECIPE,
     SHOW_DIETS_TO_MAP,
 	FILTER_BY_ID_LOWER,
 	FILTER_BY_ID_MAX,
-    //FILTER_ALL_V,
+    RESET_FILTERED_RECIPES,
     GET_DIETS_LINK,
     GET_ALL_RECIPES_LINK,
     GET_RECIPE_BY_TITLE_LINK,
@@ -110,5 +110,14 @@ export function filtersActionFunction(filterType, payload) {
 		dispatch({
 			type: filterType, payload: payload
 		});
+	};
+}
+
+export function resetFilteredRecipes() {
+	return function (dispatch) {
+		dispatch({
+		type: RESET_FILTERED_RECIPES,
+		payload: []
+	});
 	};
 }
